@@ -8,6 +8,8 @@ Projet basé sur Symfony 6.4
  - Symfony CMD (recommandé)
 
 ## Commit :
- - "feat : comment"   Ajout ou modification majeure d'une fonctionnalité
- - "fix : comment"    Fix d'un bug
- - "refact : comment" Modification mineurs
+<pre>
+ - "feat : comment"         Ajout ou modification majeure d'une fonctionnalité
+ - "fix : comment"          Fix d'un bug
+ - "refactor : comment"     Modification mineurs
+</pre>
