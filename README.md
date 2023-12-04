@@ -2,7 +2,7 @@
 Projet basé sur Symfony 6.4
 
 ## Prérequis pour le projet :
- - PHP 8.1
+ - PHP 8.2.13
  - Composer 2.4 ou plus récent
  - PHP-CS-Fixer (respect de la norme PSR12 pour l'ensemble du projet)
  - Symfony CMD (recommandé)
