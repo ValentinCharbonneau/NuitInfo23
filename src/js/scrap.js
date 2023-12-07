@@ -67,7 +67,7 @@ async function scrapeWebpageForImages(url) {
 // Fonction pour vérifier la présence d'un élément dans une chaîne et renvoyer l'indice de confiance
 function checkPresenceAndConfidence(str, element) {
     const distance = levenshteinDistance(str, element);
-    const confidence = 100 - distance / Math.max(str.length, element.length);
+    const confidence = 100 - 40*(distance / Math.max(str.length, element.length));
     return { presence: distance === 0, confidence: confidence };
 }
 function removeExtraSpaces(str) {
@@ -94,7 +94,7 @@ async function scrapeWebpage(url, searchTerm) {
     // Calculer le score de confiance en fonction de la distance de Hamming
     const confidenceScore = result.confidence;
 
-    console.log(removeExtraSpaces(pageContent))
+    //console.log(removeExtraSpaces(pageContent))
     // Fermer le navigateur
     await browser.close();
 
@@ -105,7 +105,7 @@ async function scrapeWebpage(url, searchTerm) {
 const url = 'https://www.ademe.fr/';
 const element = 'pomme';
 
-
+/*
 scrapeWebpage(url, element)
     .then((result) => {
         console.log('Contenu de la page:', result.content);
@@ -122,26 +122,34 @@ scrapeWebpageForImages(url)
     .catch((error) => {
         console.error('Erreur lors du scraping:', error);
     });
+*/
 
-choixImage(scrapeWebpageForImages(url), "liberté")
 
-function choixImage(dicoImage, motClef) {
-    let res = [];
-    let confiance = 0;
-
-    Object.entries(dicoImage).forEach(([key, value]) => {
-        let tmpConfiance = checkPresenceAndConfidence(value, motClef);
-        tmpConfiance = tmpConfiance.confidence;
-        // Vous pouvez faire quelque chose avec tmpConfiance, par exemple l'ajouter à confiance
-        if (tmpConfiance > confiance){
-            confiance = tmpConfiance
-            res = [key, value];
+async function checkImageDescriptions(images, keyword) {
+    // Parcourir chaque image
+    for (let image of images) {
+        // Appliquer checkPresenceAndConfidence sur la description de l'image
+        const result = checkPresenceAndConfidence(image.description, keyword);
+        if (image.description.toLowerCase().includes(keyword.toLowerCase())) {
+            // Si le score de confiance est supérieur à 50, afficher l'image et le score de confiance
+            if (result.confidence > 50) {
+                if (images.description !== '' || images.description !== 'Cookies (fenêtre modale)') {
+                    console.log('Image:', image.url);
+                    console.log('Description:', image.description);
+                    console.log('Score de confiance:', result.confidence);
+                }
+            }
         }
-    });
-    if (confiance < 50){
-        return null;
-    }
-    else {
-        return res;
     }
 }
+
+// Exemple d'utilisation
+const keyword = 'liberté';
+scrapeWebpageForImages(url)
+    .then((images) => {
+        checkImageDescriptions(images, keyword);
+    })
+    .catch((error) => {
+        console.error('Erreur lors du scraping:', error);
+    });
+
