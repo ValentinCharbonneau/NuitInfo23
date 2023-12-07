@@ -67,7 +67,7 @@ async function scrapeWebpageForImages(url) {
 // Fonction pour vérifier la présence d'un élément dans une chaîne et renvoyer l'indice de confiance
 function checkPresenceAndConfidence(str, element) {
     const distance = levenshteinDistance(str, element);
-    const confidence = 100 - 40*(distance / Math.max(str.length, element.length));
+    const confidence = 100 - 20*(distance / Math.max(str.length, element.length));
     return { presence: distance === 0, confidence: confidence };
 }
 function removeExtraSpaces(str) {
@@ -78,37 +78,48 @@ async function scrapeWebpage(url, searchTerm) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    // Naviguer vers l'URL spécifiée
-    await page.goto(url);
+    try {
+        // Naviguer vers l'URL spécifiée
+        await page.goto(url);
 
-    // Attendre que la page soit chargée (vous pouvez ajuster le temps d'attente en fonction de la page)
-    await page.waitForTimeout(2000);
+        // Attendre que la page soit chargée (vous pouvez ajuster le temps d'attente en fonction de la page)
+        await page.waitForTimeout(2000);
 
-    // Extraire le contenu de la page
-    const pageContent = await page.evaluate(() => {
-        return document.body.textContent;
-    });
-    // Calculer la distance de Hamming entre le terme recherché et le contenu de la page
-    const result = checkPresenceAndConfidence(searchTerm, pageContent);
+        // Extraire les balises <p> contenant le terme spécifié
+        const matchingParagraphs = await page.evaluate((searchTerm) => {
+            const paragraphs = Array.from(document.querySelectorAll('p'));
+            const matchingParagraphs = paragraphs.filter((p) => p.textContent.includes(searchTerm));
+            return matchingParagraphs.map((p) => p.outerHTML); // Renvoyer le HTML complet de chaque balise <p>
+        }, searchTerm);
 
-    // Calculer le score de confiance en fonction de la distance de Hamming
-    const confidenceScore = result.confidence;
+        // Calculer la distance de Hamming entre le terme recherché et le contenu de la page
+        const result = checkPresenceAndConfidence(searchTerm, matchingParagraphs.join(' '));
 
-    //console.log(removeExtraSpaces(pageContent))
-    // Fermer le navigateur
-    await browser.close();
+        // Calculer le score de confiance en fonction de la distance de Hamming
+        const confidenceScore = result.confidence;
 
-    return {content: result.presence, confidence: confidenceScore};
+        // Fermer le navigateur
+        await browser.close();
+
+        // Retourner les balises <p> contenant le terme spécifié
+        return { content: matchingParagraphs.join(' '), confidence: confidenceScore };
+    } catch (error) {
+        console.error('Erreur lors du scraping de la page :', error);
+        return { content: '', confidence: 0 };
+    }
+}
+
+function monsieurPropre(htmlString) {
+    return htmlString.replace(/<[^>]*>/g, '');
 }
 
 // utilisation
 const url = 'https://www.ademe.fr/';
-const element = 'pomme';
+const element = 'le terrain';
 
-/*
 scrapeWebpage(url, element)
     .then((result) => {
-        console.log('Contenu de la page:', result.content);
+        console.log('Contenu de la page:', monsieurPropre(result.content));
         console.log('Score de confiance:', result.confidence);
     })
     .catch((error) => {
@@ -122,7 +133,7 @@ scrapeWebpageForImages(url)
     .catch((error) => {
         console.error('Erreur lors du scraping:', error);
     });
-*/
+
 
 
 async function checkImageDescriptions(images, keyword) {
@@ -143,7 +154,6 @@ async function checkImageDescriptions(images, keyword) {
     }
 }
 
-// Exemple d'utilisation
 const keyword = 'liberté';
 scrapeWebpageForImages(url)
     .then((images) => {
