@@ -1,7 +1,13 @@
 CS_PATH = src
 
-cs-check:
+l-cs-check:
+	./vendor/bin/php-cs-fixer fix --dry-run $(CS_PATH)
+
+l-cs-fix:
+	./vendor/bin/php-cs-fixer fix $(CS_PATH)
+
+w-cs-check:
 	vendor\bin\php-cs-fixer fix --dry-run $(CS_PATH)
 
-cs-fix:
+w-cs-fix:
 	vendor\bin\php-cs-fixer fix $(CS_PATH)
