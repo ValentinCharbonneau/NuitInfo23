@@ -40,55 +40,64 @@ async function scrapeWebpageForLinks(url, limiteur = '') {
 }
 
 async function remplirChampDeRecherche(url, searchTerm) {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+    return new Promise(async (resolve, reject) => {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
 
-    try {
-        // Intercepter la navigation pour obtenir l'URL après la soumission du formulaire
-        page.on('response', async (response) => {
-            const responseUrl = response.url();
-            if (responseUrl.startsWith('https://www.wikidata.org/w/index.php?search')) {
-                console.log('URL filtrée :', responseUrl);
+        try {
+            // Intercepter la navigation pour obtenir l'URL après la soumission du formulaire
+            page.on('response', async (response) => {
+                const responseUrl = response.url();
+                if (responseUrl.startsWith('https://www.wikidata.org/w/index.php?search')) {
+                    console.log('URL filtrée :', responseUrl);
+                    resolve(responseUrl);
+                }
+            });
 
-            }
+            // Naviguer vers l'URL spécifiée
+            await page.goto(url);
 
-        });
+            // Attendre que l'élément de recherche soit présent
+            await page.waitForSelector('#searchInput');
 
-        // Naviguer vers l'URL spécifiée
-        await page.goto(url);
+            // Sélectionner l'élément de recherche par son ID
+            const inputElement = await page.$('#searchInput');
 
-        // Attendre que l'élément de recherche soit présent
-        await page.waitForSelector('#searchInput');
+            // Entrer la valeur dans le champ
+            await inputElement.type(searchTerm);
 
-        // Sélectionner l'élément de recherche par son ID
-        const inputElement = await page.$('#searchInput');
+            // Soumettre le formulaire (peut nécessiter des ajustements en fonction de la structure de la page)
+            await page.keyboard.press('Enter');
 
-        // Entrer la valeur dans le champ
-        await inputElement.type(searchTerm);
+            // Attendre un peu (facultatif, pour voir le résultat)
+            await page.waitForTimeout(2000);
 
-        // Soumettre le formulaire (peut nécessiter des ajustements en fonction de la structure de la page)
-        await page.keyboard.press('Enter');
-
-        // Attendre un peu (facultatif, pour voir le résultat)
-        await page.waitForTimeout(2000);
-
-        console.log('Champ de recherche rempli avec succès');
-    } catch (error) {
-        console.error('Erreur lors du remplissage du champ de recherche :', error);
-    } finally {
-        // Fermer le navigateur
-        await browser.close();
-    }
+            console.log('Champ de recherche rempli avec succès');
+            reject('Aucune URL filtrée trouvée'); // Si l'URL n'est pas trouvée
+        } catch (error) {
+            console.error('Erreur lors du remplissage du champ de recherche :', error);
+            reject(error);
+        } finally {
+            // Fermer le navigateur
+            await browser.close();
+        }
+    });
 }
 
 // Exemple d'utilisation
 const url = 'https://www.wikidata.org/wiki/Wikidata:Main_Page';
 const searchTerm = 'panneau solaire';
 remplirChampDeRecherche(url, searchTerm)
-    .then(() => console.log('Champ de recherche rempli avec succès'))
-    .catch((error) => console.error('Erreur lors du remplissage du champ de recherche :', error));
-// utilisation
-//const url = 'https://www.wikidata.org/wiki/Wikidata:Main_Page';
+    .then((filteredUrl) => {
+        // Utiliser l'URL filtrée dans scrapeWebpageForLinks
+        return scrapeWebpageForLinks(filteredUrl, 'https://www.wikidata.org/wiki/Q');
+    })
+    .then((links) => {
+        console.log('Liens filtrés :', links);
+    })
+    .catch((error) => {
+        console.error('Erreur :', error);
+    });
 
 const limiteur = 'https://www.wikidata.org';  // Mettez votre limiteur ici
 scrapeWebpageForLinks(url, limiteur)
@@ -100,14 +109,5 @@ scrapeWebpageForLinks(url, limiteur)
     });
 
 
-scrapeWebpageForLinks("https://www.wikidata.org/w/index.php?search=panneau+solaire&search=panneau+solaire&title=Special%3ASearch&fulltext=Search", "https://www.wikidata.org/wiki/Q")
-    .then(links => {
-        console.log('Liens filtrés :', links);
-    })
-    .catch(error => {
-        console.error('Erreur :', error);
-    });
 
-
-// api key : open ai : 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
 
