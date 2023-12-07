@@ -85,14 +85,21 @@ async function scrapeWebpage(url, searchTerm) {
         // Attendre que la page soit chargée (vous pouvez ajuster le temps d'attente en fonction de la page)
         await page.waitForTimeout(2000);
 
-        // Extraire les balises <p> contenant le terme spécifié
+        // Extraire toutes les balises <p> contenant le terme spécifié
         const matchingParagraphs = await page.evaluate((searchTerm) => {
             const paragraphs = Array.from(document.querySelectorAll('p'));
-            const matchingParagraphs = paragraphs.filter((p) => p.textContent.includes(searchTerm));
-            return matchingParagraphs.map((p) => p.outerHTML); // Renvoyer le HTML complet de chaque balise <p>
+            const matchingParagraphs = [];
+
+            paragraphs.forEach((p) => {
+                if (p.textContent.includes(searchTerm)) {
+                    matchingParagraphs.push(p.outerHTML);
+                }
+            });
+
+            return matchingParagraphs;
         }, searchTerm);
 
-        // Calculer la distance de Hamming entre le terme recherché et le contenu de la page
+        // Calculer la distance de levenshtein entre le terme recherché et le contenu de la page
         const result = checkPresenceAndConfidence(searchTerm, matchingParagraphs.join(' '));
 
         // Calculer le score de confiance en fonction de la distance de Hamming
@@ -101,7 +108,7 @@ async function scrapeWebpage(url, searchTerm) {
         // Fermer le navigateur
         await browser.close();
 
-        // Retourner les balises <p> contenant le terme spécifié
+        // Retourner toutes les balises <p> contenant le terme spécifié
         return { content: matchingParagraphs.join(' '), confidence: confidenceScore };
     } catch (error) {
         console.error('Erreur lors du scraping de la page :', error);
@@ -109,13 +116,14 @@ async function scrapeWebpage(url, searchTerm) {
     }
 }
 
+
 function monsieurPropre(htmlString) {
     return htmlString.replace(/<[^>]*>/g, '');
 }
 
 // utilisation
 const url = 'https://www.ademe.fr/';
-const element = 'le terrain';
+const element = 'climat';
 
 scrapeWebpage(url, element)
     .then((result) => {
