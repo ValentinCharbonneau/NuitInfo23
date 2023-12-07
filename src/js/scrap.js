@@ -123,6 +123,8 @@ scrapeWebpageForImages(url)
         console.error('Erreur lors du scraping:', error);
     });
 
+choixImage(scrapeWebpageForImages(url), "liberté")
+
 function choixImage(dicoImage, motClef) {
     let res = [];
     let confiance = 0;
