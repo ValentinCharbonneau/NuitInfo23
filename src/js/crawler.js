@@ -39,3 +39,15 @@ scrapeWebpageForLinks(url)
     .catch((error) => {
         console.error('Erreur lors du scraping:', error);
     });
+
+
+
+// bard code
+const bardapi = require('@xelcior/bard-api');
+
+const _bard = new bardapi("[SESSION TOKEN HERE]");
+
+(async () => {
+    const answer = await _bard.getAnswer('What is Google Bard?');
+    console.log(answer); //use response
+})();

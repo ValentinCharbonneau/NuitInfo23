@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@xelcior/bard-api": "^1.0.1",
     "puppeteer": "^21.6.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2"
