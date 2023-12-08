@@ -109,7 +109,7 @@ async function scrapeWebpage(url, searchTerm) {
         await browser.close();
 
         // Retourner toutes les balises <p> contenant le terme spécifié
-        return { content: matchingParagraphs.join(' '), confidence: confidenceScore };
+        return { content: monsieurPropre(matchingParagraphs.join(' ')), confidence: confidenceScore };
     } catch (error) {
         console.error('Erreur lors du scraping de la page :', error);
         return { content: '', confidence: 0 };
@@ -170,4 +170,9 @@ scrapeWebpageForImages(url)
     .catch((error) => {
         console.error('Erreur lors du scraping:', error);
     });
+
+module.exports = {
+    scrapeWebpage,
+    scrapeWebpageForImages
+};
 

@@ -85,29 +85,12 @@ async function remplirChampDeRecherche(url, searchTerm) {
 }
 
 // Exemple d'utilisation
-const url = 'https://www.wikidata.org/wiki/Wikidata:Main_Page';
-const searchTerm = 'panneau solaire';
-remplirChampDeRecherche(url, searchTerm)
-    .then((filteredUrl) => {
-        // Utiliser l'URL filtrée dans scrapeWebpageForLinks
-        return scrapeWebpageForLinks(filteredUrl, 'https://www.wikidata.org/wiki/Q');
-    })
-    .then((links) => {
-        console.log('Liens filtrés :', links);
-    })
-    .catch((error) => {
-        console.error('Erreur :', error);
-    });
-
-const limiteur = 'https://www.wikidata.org';  // Mettez votre limiteur ici
-scrapeWebpageForLinks(url, limiteur)
-    .then(links => {
-        console.log('Liens filtrés :', links);
-    })
-    .catch(error => {
-        console.error('Erreur :', error);
-    });
 
 
+
+module.exports = {
+    scrapeWebpageForLinks,
+    remplirChampDeRecherche
+};
 
 
