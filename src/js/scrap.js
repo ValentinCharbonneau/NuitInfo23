@@ -131,7 +131,7 @@ async function e2pz(url, searchTerm) {
         const scrapper = await scrapeWebpageForLinks(url, url);
 
         // Utilisation de Promise.all pour paralléliser les appels à scrapeWebpage
-        const results = await Promise.all(scrapper.map(element => scrapeWebpage(element, searchTerm)));
+        const results = await Promise.all(scrapper.map(element => scrapeWebpage(element, searchTerm).content));
 
         // Utilisation de join pour concaténer les résultats
         const maChaine = results.join(' \n\n');
