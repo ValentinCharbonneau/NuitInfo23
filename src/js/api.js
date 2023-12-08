@@ -3,7 +3,7 @@ const app = express();
 const port = 3000; // Choisissez le port que vous souhaitez utiliser
 
 const { scrapeWebpageForLinks, remplirChampDeRecherche } = require('./crawler');
-const { scrapeWebpageForImages, scrapeWebpage } = require('./scrap');
+const { scrapeWebpageForImages, scrapeWebpage, chercheImage } = require('./scrap');
 
 // Exemple d'une route GET
 app.get('/', (req, res) => {

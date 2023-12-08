@@ -12,6 +12,10 @@ const puppeteer = require('puppeteer-extra')
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 puppeteer.use(StealthPlugin())
 
+// import la fonction remplirChampDeRecherche from crawler.js
+const { remplirChampDeRecherche } = require('./crawler');
+
+
 
 // Fonction pour calculer la distance de Levenshtein entre deux chaînes
 function levenshteinDistance(str1, str2) {
@@ -124,7 +128,7 @@ function monsieurPropre(htmlString) {
 // utilisation
 const url = 'https://www.ademe.fr/';
 const element = 'climat';
-
+/*
 scrapeWebpage(url, element)
     .then((result) => {
         console.log('Contenu de la page:', monsieurPropre(result.content));
@@ -141,10 +145,12 @@ scrapeWebpageForImages(url)
     .catch((error) => {
         console.error('Erreur lors du scraping:', error);
     });
-
+*/
 
 
 async function checkImageDescriptions(images, keyword) {
+    let res;
+    let confiance = 0;
     // Parcourir chaque image
     for (let image of images) {
         // Appliquer checkPresenceAndConfidence sur la description de l'image
@@ -156,12 +162,17 @@ async function checkImageDescriptions(images, keyword) {
                     console.log('Image:', image.url);
                     console.log('Description:', image.description);
                     console.log('Score de confiance:', result.confidence);
+                    if (result.confidence > confiance) {
+                        confiance = result.confidence;
+                        res = {image : image.url, description : image.description, score : result.confidence};
+                    }
                 }
             }
         }
     }
+    return res;
 }
-
+/*
 const keyword = 'liberté';
 scrapeWebpageForImages(url)
     .then((images) => {
@@ -170,9 +181,20 @@ scrapeWebpageForImages(url)
     .catch((error) => {
         console.error('Erreur lors du scraping:', error);
     });
+*/
+
+async function chercheImage(url1, keyword) {
+    //let url = await remplirChampDeRecherche(url1, keyword);
+    let images = await scrapeWebpageForImages(url1);
+    return checkImageDescriptions(images, keyword);
+}
 
 module.exports = {
     scrapeWebpage,
-    scrapeWebpageForImages
+    scrapeWebpageForImages,
+    chercheImage,
 };
 
+
+
+console.log(chercheImage('https://commons.wikimedia.org/wiki/Main_Page', 'climate change'));
