@@ -144,7 +144,6 @@ async function e2pz(url, searchTerm) {
     }
 }
 
-console.log(e2pz('https://www.ademe.fr/', 'climat'));
 
 // utilisation
 const url = 'https://www.ademe.fr/';
