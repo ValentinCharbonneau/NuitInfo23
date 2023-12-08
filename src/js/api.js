@@ -33,7 +33,7 @@ app.post('/api/fillSearchField', async (req, res) => {
         const searchTerm = req.body.searchTerm;
 
         // Votre logique pour remplir le champ de recherche ici
-        const browser = remplirChampDeRecherche(url, searchTerm);
+        const browser = await remplirChampDeRecherche(url, searchTerm);
 
 
         res.json({ success: true, message: browser.content });
@@ -49,7 +49,7 @@ app.post('/api/scrapeWebpage', async (req, res) => {
         const searchTerm = req.body.searchTerm;
 
         // Votre logique pour remplir le champ de recherche ici
-        const browser = scrapeWebpage(url, searchTerm);
+        const browser = await scrapeWebpage(url, searchTerm);
 
 
         res.json({ success: true, message: browser });
@@ -59,6 +59,22 @@ app.post('/api/scrapeWebpage', async (req, res) => {
     }
 });
 
+
+app.post('/api/searchimage', async (req, res) => {
+    try {
+        const url = req.body.url;
+        const searchTerm = req.body.searchTerm;
+
+        // Votre logique pour remplir le champ de recherche ici
+        const browser = await chercheImage(url, searchTerm);
+
+
+        res.json({ success: true, message: browser });
+    } catch (error) {
+        console.error('Erreur lors du remplissage du champ de recherche :', error);
+        res.status(500).json({ success: false, error: 'Erreur lors du remplissage du champ de recherche' });
+    }
+});
 
 // Écoute du serveur sur le port spécifié
 app.listen(port, () => {
