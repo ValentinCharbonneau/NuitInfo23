@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarbOut</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="lib.js"></script>
+</head>
+<body>
+    <header>
+        <button class="btn-play" onclick="href('/play')" style="margin-left: 18px; margin-top: 18px;display:none;">Jouer</button>
+        <img id="imgMode" src="/img/mode/sun.png" style="height=26px;width:26px;position:fixed;top: 1.8em;right: 13em;">
+        <input onclick="changeMode()" type="checkbox" id="switch" /><label for="switch">Toggle</label>
+        <button class="log" onclick="href('/play')">Connexion</button>
+    </header>
+    <main>
+        <div id="welcome">
+            <h1>CarbOut</h1>
+            <button class="btn-play" onclick="href('/play')">Jouer</button>
+        </div>
+
+        <div id="chat-input">
+            <input type="text" placeholder="LOOOL">
+            <button>&#8593;</button>
+        </div>
+    </main>
+</body>
+</html>

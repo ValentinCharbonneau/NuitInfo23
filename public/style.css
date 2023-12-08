@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Nova+Square&family=Tilt+Neon&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Tilt+Neon&display=swap');
+
+:root {
+    --main-color: white;
+    --header-color: #c2cfd1;
+    --font-color: black;
+    --inputChat-color: white;
+  }
+
+body {
+    font-family: 'Comfortaa', sans-serif;
+    color: var(--font-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Nova Square', sans-serif;
+}
+
+h1 {
+    font-size: 4em;
+}
+
+header {
+    width: 100vw;
+    height: 80px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border: 0;
+    background-color: var(--header-color);
+}
+
+main {
+    border-top: 80px;
+    height: calc(100vh - 80px);
+    width: 100vw;
+    position: absolute;
+    top : 80px;
+    left: 0;
+    background-color: var(--main-color);
+}
+#welcome {
+    text-align: center;
+    position: relative;
+    top: 30%;
+}
+main h1 {
+    margin: 0;
+    margin-bottom: 3%;
+}
+
+.btn-play {
+    font-family: 'Comfortaa', sans-serif;
+    color: var(--font-color);
+    background-image: linear-gradient(to bottom right, #077685, #49a87f);
+    border: none;
+    border-radius: 10px;
+    font-size: 1.5em;
+    padding-right: 0.8em;
+    padding-left: 0.8em;
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+}
+.btn-play:hover {
+    background-image: linear-gradient(to bottom right, #49a87f, #077685);
+    cursor: pointer;
+}
+
+#chat-input {
+    width: 100vw;
+    height: 100px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+#chat-input input {
+    font-family: 'Comfortaa', sans-serif;
+    margin: 20px;
+    width: calc(100vw - 150px);
+    height: 40px;
+    outline: none;
+    border: none;
+    border: solid 5px #49a87f;
+    border-radius: 20px;
+    margin-right: 0;
+    background-color: var(--inputChat-color);
+    color: var(--font-color);
+    pointer-events: auto;
+    cursor: text;
+}
+#chat-input button {
+    font-family: 'Comfortaa', sans-serif;
+    color: var(--font-color);
+    background-image: linear-gradient(to bottom right, #077685, #49a87f);
+    border: none;
+    border-radius: 10px;
+    font-size: 1.5em;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
+    padding-top: 0.4em;
+    padding-bottom: 0.7em;
+    border-radius: 20px;
+}
+#chat-input button:hover {
+    background-image: linear-gradient(to bottom right, #49a87f, #077685);
+    cursor: pointer;
+}
+
+.log {
+    font-family: 'Comfortaa', sans-serif;
+    color: var(--font-color);
+    background-image: linear-gradient(to bottom right, #077685, #49a87f);
+    border: none;
+    border-radius: 10px;
+    font-size: 1.5em;
+    padding-right: 0.8em;
+    padding-left: 0.8em;
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+    position: fixed;
+    top: 18px;
+    right: 18px;
+}
+.log:hover {
+    background-image: linear-gradient(to bottom right, #49a87f, #077685);
+    cursor: pointer;
+}
+
+@media (max-width: 720px) {
+    #chat-input button {
+        padding-right: 1em;
+        padding-left: 1em;
+    }
+    #chat-input input {
+        width: calc(100vw - 120px);
+    }
+}
+
+
+
+
+input[type=checkbox] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+  
+label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 50px;
+    height: 25px;
+    background: #49a87f;
+    display: block;
+    border-radius: 25px;
+    position: fixed;
+    right: 15em;
+    top: 1.8em;
+}
+
+label:after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 23px;
+    height: 23px;
+    background: #fff;
+    border-radius: 23px;
+    transition: 0.3s;
+}
+  
+input:checked + label {
+    background: #077685;
+}
+  
+input:checked + label:after {
+    left: calc(100% - 1px);
+    transform: translateX(-100%);
+}
+
+label:active:after {
+    width: 32px;
+}
