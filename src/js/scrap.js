@@ -7,6 +7,7 @@ npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
  */
 
 const puppeteer = require('puppeteer-extra')
+const { scrapeWebpageForLinks } = require('./crawler');
 
 // add stealth plugin and use defaults (all evasion techniques)
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
@@ -124,6 +125,26 @@ async function scrapeWebpage(url, searchTerm) {
 function monsieurPropre(htmlString) {
     return htmlString.replace(/<[^>]*>/g, '');
 }
+
+async function e2pz(url, searchTerm) {
+    try {
+        const scrapper = await scrapeWebpageForLinks(url, url);
+
+        // Utilisation de Promise.all pour paralléliser les appels à scrapeWebpage
+        const results = await Promise.all(scrapper.map(element => scrapeWebpage(element, searchTerm)));
+
+        // Utilisation de join pour concaténer les résultats
+        const maChaine = results.join(' \n\n');
+
+        // Vous pouvez faire quelque chose avec maChaine ici, ou la retourner si nécessaire
+        return maChaine;
+    } catch (error) {
+        console.error('Une erreur s\'est produite :', error);
+        throw error; // Propagez l'erreur pour que le code appelant puisse la gérer
+    }
+}
+
+console.log(e2pz('https://www.ademe.fr/', 'climat'));
 
 // utilisation
 const url = 'https://www.ademe.fr/';
